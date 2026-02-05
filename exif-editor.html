@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXIF Editor Pro</title>
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/piexifjs@1.0.6/piexif.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
+
     <style>
         :root {
             --primary: #18181b;
@@ -586,18 +587,34 @@
             border: 1px solid var(--border);
         }
 
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--error); }
-        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
 
         .toast-icon {
             font-size: 24px;
             flex-shrink: 0;
         }
 
-        .toast.success .toast-icon { color: var(--success); }
-        .toast.error .toast-icon { color: var(--error); }
-        .toast.warning .toast-icon { color: var(--warning); }
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--error);
+        }
+
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
 
         .toast-content {
             flex: 1;
@@ -619,6 +636,7 @@
                 transform: translateY(20px);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -635,17 +653,25 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .hidden { display: none !important; }
+        .hidden {
+            display: none !important;
+        }
 
         @media (min-width: 768px) {
             .images-grid {
                 grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
                 gap: 16px;
             }
-            .map-container { height: 380px; }
+
+            .map-container {
+                height: 380px;
+            }
+
             .toast-container {
                 left: auto;
                 right: 28px;
@@ -654,6 +680,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="app">
         <header class="header">
@@ -678,7 +705,8 @@
                     </div>
                     <h2 class="upload-title">上传图片</h2>
                     <p class="upload-desc">点击或拖拽图片到这里<br>支持 JPG、PNG 格式（PNG 将自动转换为 JPG）</p>
-                    <input type="file" class="upload-input" id="fileInput" accept="image/jpeg,image/jpg,image/png" multiple>
+                    <input type="file" class="upload-input" id="fileInput" accept="image/jpeg,image/jpg,image/png"
+                        multiple>
                 </div>
             </div>
 
@@ -687,7 +715,8 @@
                     <div class="images-header">
                         <div class="images-title">
                             <span>图片列表</span>
-                            <span class="images-count"><span id="selectedCount">0</span>/<span id="totalCount">0</span></span>
+                            <span class="images-count"><span id="selectedCount">0</span>/<span
+                                    id="totalCount">0</span></span>
                         </div>
                         <div class="images-actions">
                             <button class="icon-btn" id="selectAllBtn" title="全选">
@@ -715,24 +744,50 @@
                     <div class="form-section">
                         <div class="section-title">
                             <i class="ri-camera-fill"></i>
-                            相机信息
+                            相机与时间信息
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">相机品牌</label>
-                            <select class="form-control" id="cameraBrand">
-                                <option value="">选择品牌</option>
-                                <option value="Canon">Canon</option>
-                                <option value="Nikon">Nikon</option>
-                                <option value="Sony">Sony</option>
-                                <option value="Fujifilm">Fujifilm</option>
-                                <option value="Leica">Leica</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">相机品牌</label>
+                                <select class="form-control" id="cameraBrand">
+                                    <option value="">选择品牌</option>
+                                    <option value="Canon">Canon</option>
+                                    <option value="Nikon">Nikon</option>
+                                    <option value="Sony">Sony</option>
+                                    <option value="Fujifilm">Fujifilm</option>
+                                    <option value="Leica">Leica</option>
+                                    <option value="Apple">Apple</option>
+                                    <option value="Samsung">Samsung</option>
+                                    <option value="Google">Google</option>
+                                    <option value="Xiaomi">Xiaomi</option>
+                                    <option value="Huawei">Huawei</option>
+                                    <option value="OPPO">OPPO</option>
+                                    <option value="vivo">vivo</option>
+                                    <option value="DJI">DJI</option>
+                                    <option value="Ricoh">Ricoh</option>
+                                    <option value="Hasselblad">Hasselblad</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">相机型号</label>
+                                <select class="form-control" id="cameraModel" disabled>
+                                    <option value="">先选择品牌</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">相机型号</label>
-                            <select class="form-control" id="cameraModel" disabled>
-                                <option value="">先选择品牌</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">镜头型号</label>
+                                <input type="text" class="form-control" id="lensModel" list="lensList"
+                                    placeholder="例如: iPhone 15 Pro Max Back Triple Camera">
+                                <datalist id="lensList"></datalist>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">拍摄时间 (起始时间)</label>
+                                <input type="datetime-local" class="form-control" id="dateTime">
+                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">* 批量递增 1 秒
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -795,87 +850,181 @@
                         </div>
                     </div>
 
-                    <div class="form-section">
-                        <div class="section-title">
-                            <i class="ri-map-pin-fill"></i>
-                            位置信息
+
+                </div>
+
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="ri-map-pin-fill"></i>
+                        位置信息
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">常用地点</label>
+                        <select class="form-control" id="locationPreset">
+                            <option value="">选择预设地点</option>
+                            <option value="39.9042,116.4074">北京</option>
+                            <option value="31.2304,121.4737">上海</option>
+                            <option value="22.5431,114.0579">深圳</option>
+                            <option value="23.1291,113.2644">广州</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">纬度</label>
+                            <input type="number" class="form-control" id="latitude" step="0.000001"
+                                placeholder="39.904200">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">常用地点</label>
-                            <select class="form-control" id="locationPreset">
-                                <option value="">选择预设地点</option>
-                                <option value="39.9042,116.4074">北京</option>
-                                <option value="31.2304,121.4737">上海</option>
-                                <option value="22.5431,114.0579">深圳</option>
-                                <option value="23.1291,113.2644">广州</option>
-                            </select>
+                            <label class="form-label">经度</label>
+                            <input type="number" class="form-control" id="longitude" step="0.000001"
+                                placeholder="116.407400">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">纬度</label>
-                                <input type="number" class="form-control" id="latitude" step="0.000001" placeholder="39.904200">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">经度</label>
-                                <input type="number" class="form-control" id="longitude" step="0.000001" placeholder="116.407400">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">地图选择</label>
-                            <div class="map-container">
-                                <div class="map-search">
-                                    <input type="text" class="map-search-input" id="mapSearch" placeholder="搜索地点...">
-                                    <button class="map-search-btn" id="mapSearchBtn">
-                                        <i class="ri-search-line"></i>
-                                    </button>
-                                </div>
-                                <div id="map" style="width: 100%; height: 100%;"></div>
-                            </div>
-                            <div class="map-controls">
-                                <button class="btn btn-secondary" id="currentLocationBtn">
-                                    <i class="ri-crosshair-line"></i>
-                                    当前位置
-                                </button>
-                                <button class="btn btn-secondary" id="clearLocationBtn">
-                                    <i class="ri-close-line"></i>
-                                    清除位置
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">地图选择</label>
+                        <div class="map-container">
+                            <div class="map-search">
+                                <input type="text" class="map-search-input" id="mapSearch" placeholder="搜索地点...">
+                                <button class="map-search-btn" id="mapSearchBtn">
+                                    <i class="ri-search-line"></i>
                                 </button>
                             </div>
+                            <div id="map" style="width: 100%; height: 100%;"></div>
+                        </div>
+                        <div class="map-controls">
+                            <button class="btn btn-secondary" id="currentLocationBtn">
+                                <i class="ri-crosshair-line"></i>
+                                当前位置
+                            </button>
+                            <button class="btn btn-secondary" id="clearLocationBtn">
+                                <i class="ri-close-line"></i>
+                                清除位置
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+    </div>
+    </main>
 
-        <footer class="footer hidden" id="footer">
-            <div class="footer-content">
-                <button class="btn btn-primary" id="applyBtn">
-                    <i class="ri-save-fill"></i>
-                    <span>应用并下载</span>
-                </button>
-            </div>
-        </footer>
-
-        <div class="progress-overlay" id="progressOverlay">
-            <div class="progress-card">
-                <h3 class="progress-title" id="progressTitle">处理中...</h3>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
-                <p class="progress-text" id="progressText">0 / 0</p>
-            </div>
+    <footer class="footer hidden" id="footer">
+        <div class="footer-content">
+            <button class="btn btn-primary" id="applyBtn">
+                <i class="ri-save-fill"></i>
+                <span>应用并下载</span>
+            </button>
         </div>
+    </footer>
 
-        <div class="toast-container" id="toastContainer"></div>
+    <div class="progress-overlay" id="progressOverlay">
+        <div class="progress-card">
+            <h3 class="progress-title" id="progressTitle">处理中...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p class="progress-text" id="progressText">0 / 0</p>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
     </div>
 
     <script>
         const CAMERAS = {
-            'Canon': ['EOS R5', 'EOS R6', 'EOS 5D Mark IV'],
-            'Nikon': ['Z9', 'Z7 II', 'D850'],
-            'Sony': ['A1', 'A7R V', 'A7 IV'],
-            'Fujifilm': ['X-H2S', 'X-T5', 'X-T4'],
-            'Leica': ['M11', 'Q2', 'SL2']
+            'Canon': ['EOS R1', 'EOS R5 Mark II', 'EOS R5', 'EOS R6 Mark II', 'EOS R3', 'EOS R8', 'EOS R50', 'EOS R100'],
+            'Nikon': ['Z9', 'Z8', 'Z6 III', 'Zf', 'Z7 II', 'Z5', 'Zfc', 'Z30'],
+            'Sony': ['A9 III', 'A1', 'A7R V', 'A7 IV', 'A7C II', 'ZV-E1', 'A6700'],
+            'Fujifilm': ['GFX 100 II', 'X100VI', 'X-H2S', 'X-T5', 'X-S20', 'X-T50'],
+            'Leica': ['SL3', 'Q3', 'M11-P', 'M11', 'SL2-S', 'D-Lux 8'],
+            'Apple': ['iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17 Air', 'iPhone 17', 'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16', 'iPhone 15 Pro Max', 'iPhone 15 Pro', 'iPhone 15 Plus', 'iPhone 15'],
+            'Samsung': ['Galaxy S25 Ultra', 'Galaxy S25+', 'Galaxy S25', 'Galaxy S24 Ultra', 'Galaxy S24+', 'Galaxy S24', 'Galaxy Z Fold6', 'Galaxy Z Flip6'],
+            'Google': ['Pixel 10 Pro XL', 'Pixel 10 Pro', 'Pixel 10', 'Pixel 10 Pro Fold', 'Pixel 9 Pro XL', 'Pixel 9 Pro', 'Pixel 9', 'Pixel 9 Pro Fold'],
+            'Xiaomi': ['Xiaomi 16 Ultra', 'Xiaomi 16 Pro', 'Xiaomi 16', 'Xiaomi 15 Ultra', 'Xiaomi 15 Pro', 'Xiaomi 15', 'Xiaomi 14 Ultra'],
+            'Huawei': ['Mate 70 Pro+', 'Mate 70 Pro', 'Mate 70', 'Pura 70 Ultra', 'Pura 70 Pro', 'Pura 70'],
+            'OPPO': ['Find X8 Ultra', 'Find X8 Pro', 'Find X8', 'Find N3'],
+            'vivo': ['X200 Ultra', 'X200 Pro', 'X200', 'X Fold3 Pro'],
+            'DJI': ['Mavic 3 Pro', 'Mavic 3', 'Mini 4 Pro', 'Mini 3 Pro', 'Air 3'],
+            'Ricoh': ['GR III HDF', 'GR IIIx HDF', 'GR III', 'GR IIIx'],
+            'Hasselblad': ['X2D 100C', '907X & CFV 100C']
+        };
+
+        const LENSES = {
+            'Apple': [
+                'iPhone 17 Pro Max Back Triple Camera 6.86mm f/1.78',
+                'iPhone 16 Pro Max Back Triple Camera 6.86mm f/1.78',
+                'iPhone 15 Pro Max Back Triple Camera 6.86mm f/1.78',
+                'iPhone Back Dual Camera 5.96mm f/1.6'
+            ],
+            'Sony': [
+                'FE 24-70mm F2.8 GM II',
+                'FE 70-200mm F2.8 GM OSS II',
+                'FE 16-35mm F2.8 GM II',
+                'FE 50mm F1.2 GM',
+                'FE 35mm F1.4 GM',
+                'FE 24mm F1.4 GM',
+                'FE 85mm F1.4 GM II',
+                'FE 20-70mm F4 G'
+            ],
+            'Canon': [
+                'RF 24-70mm F2.8 L IS USM',
+                'RF 70-200mm F2.8 L IS USM',
+                'RF 15-35mm F2.8 L IS USM',
+                'RF 50mm F1.2 L USM',
+                'RF 85mm F1.2 L USM',
+                'RF 28-70mm F2 L USM',
+                'RF 24-105mm F4 L IS USM',
+                'RF 35mm F1.8 Macro IS STM'
+            ],
+            'Nikon': [
+                'NIKKOR Z 24-70mm f/2.8 S',
+                'NIKKOR Z 70-200mm f/2.8 VR S',
+                'NIKKOR Z 14-24mm f/2.8 S',
+                'NIKKOR Z 50mm f/1.2 S',
+                'NIKKOR Z 85mm f/1.2 S',
+                'NIKKOR Z 35mm f/1.8 S',
+                'NIKKOR Z 40mm f/2'
+            ],
+            'Fujifilm': [
+                'XF 16-55mm F2.8 R LM WR',
+                'XF 50-140mm F2.8 R LM OIS WR',
+                'XF 33mm F1.4 R LM WR',
+                'XF 23mm F1.4 R LM WR',
+                'XF 56mm F1.2 R WR',
+                'XF 35mm F1.4 R',
+                'GF 20-35mm F4 R WR'
+            ],
+            'Leica': [
+                'Summilux-M 35mm f/1.4 ASPH.',
+                'Summilux-M 50mm f/1.4 ASPH.',
+                'Summicron-M 35mm f/2 ASPH.',
+                'Noctilux-M 50mm f/0.95 ASPH.',
+                'Vario-Elmarit-SL 24-70 f/2.8 ASPH.',
+                'Summilux 28mm f/1.7 ASPH.'
+            ],
+            'Samsung': [
+                'Galaxy S25 Ultra Back Quad Camera',
+                'Galaxy S24 Ultra Back Quad Camera',
+                'Galaxy S23 Ultra Back Quad Camera'
+            ],
+            'Xiaomi': [
+                'Xiaomi 16 Ultra Back Quad Camera',
+                'Xiaomi 15 Ultra Back Quad Camera',
+                'Xiaomi 14 Ultra Back Quad Camera'
+            ],
+            'DJI': [
+                'Mavic 3 Pro Hasselblad Camera',
+                'Mavic 3 Hasselblad Camera',
+                'Mini 3 Pro Camera'
+            ],
+            'Ricoh': [
+                'GR Lens 18.3mm F2.8',
+                'GR Lens 26.1mm F2.8'
+            ],
+            'Hasselblad': [
+                'XCD 2,5/55V',
+                'XCD 2,5/38V',
+                'XCD 2,5/90V'
+            ]
         };
 
         const state = {
@@ -915,7 +1064,10 @@
             mapSearch: document.getElementById('mapSearch'),
             mapSearchBtn: document.getElementById('mapSearchBtn'),
             currentLocationBtn: document.getElementById('currentLocationBtn'),
-            clearLocationBtn: document.getElementById('clearLocationBtn')
+            clearLocationBtn: document.getElementById('clearLocationBtn'),
+            lensModel: document.getElementById('lensModel'),
+            lensList: document.getElementById('lensList'),
+            dateTime: document.getElementById('dateTime')
         };
 
         function toast(title, message, type = 'success') {
@@ -924,7 +1076,7 @@
                 error: 'ri-error-warning-fill',
                 warning: 'ri-alert-fill'
             };
-            
+
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = `
@@ -934,7 +1086,7 @@
                     ${message ? `<div class="toast-message">${message}</div>` : ''}
                 </div>
             `;
-            
+
             DOM.toastContainer.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -1043,27 +1195,35 @@
                 shutter: DOM.shutter.value || '',
                 focal: DOM.focal.value || '',
                 latitude: DOM.latitude.value || '',
-                longitude: DOM.longitude.value || ''
+                longitude: DOM.longitude.value || '',
+                lensModel: DOM.lensModel.value || '',
+                dateTime: DOM.dateTime.value || ''
             };
 
             DOM.applyBtn.disabled = true;
             DOM.progressOverlay.classList.add('active');
 
             const processedBlobs = [];
-            const baseTime = Date.now();
+
+            let baseTime;
+            if (exifData.dateTime) {
+                baseTime = new Date(exifData.dateTime).getTime();
+            } else {
+                baseTime = Date.now();
+            }
 
             try {
                 for (let i = 0; i < selected.length; i++) {
                     const imageData = selected[i];
                     const timestamp = baseTime + (i * 1000);
-                    
+
                     // 🔥 关键：先转换为 JPEG，再写入 EXIF
                     const jpegDataUrl = await convertToJpeg(imageData.dataUrl);
                     const blob = await processImageWithExif(jpegDataUrl, exifData, timestamp);
                     const filename = generateFilename(exifData.make, timestamp, i);
-                    
+
                     processedBlobs.push({ name: filename, blob });
-                    
+
                     const progress = ((i + 1) / selected.length) * 100;
                     DOM.progressFill.style.width = `${progress}%`;
                     DOM.progressText.textContent = `${i + 1} / ${selected.length}`;
@@ -1071,7 +1231,7 @@
 
                 await downloadFiles(processedBlobs);
                 toast('处理完成', `成功处理 ${selected.length} 张图片`);
-                
+
             } catch (error) {
                 console.error('处理失败:', error);
                 toast('处理失败', error.message, 'error');
@@ -1093,13 +1253,13 @@
                     const canvas = document.createElement('canvas');
                     canvas.width = img.width;
                     canvas.height = img.height;
-                    
+
                     const ctx = canvas.getContext('2d');
                     // 白色背景（PNG 透明部分会变成白色）
                     ctx.fillStyle = '#FFFFFF';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
-                    
+
                     // 转换为 JPEG
                     const jpegDataUrl = canvas.toDataURL('image/jpeg', 1.0);
                     resolve(jpegDataUrl);
@@ -1116,12 +1276,12 @@
                     const exif = buildExif(exifData, timestamp);
                     const exifBytes = piexif.dump(exif);
                     const newDataUrl = piexif.insert(exifBytes, jpegDataUrl);
-                    
+
                     fetch(newDataUrl)
                         .then(res => res.blob())
                         .then(blob => resolve(blob))
                         .catch(err => reject(err));
-                        
+
                 } catch (error) {
                     reject(error);
                 }
@@ -1137,28 +1297,29 @@
 
             if (data.make) exif["0th"][piexif.ImageIFD.Make] = String(data.make);
             if (data.model) exif["0th"][piexif.ImageIFD.Model] = String(data.model);
+            if (data.lensModel) exif["Exif"][0xA434] = String(data.lensModel); // LensModel tag
 
             if (data.iso) exif["Exif"][piexif.ExifIFD.ISOSpeedRatings] = parseInt(data.iso);
-            
+
             if (data.aperture) {
                 const f = parseFloat(data.aperture);
                 exif["Exif"][piexif.ExifIFD.FNumber] = [Math.round(f * 10), 10];
             }
-            
+
             if (data.shutter) {
                 const parts = data.shutter.split('/');
                 if (parts.length === 2) {
                     exif["Exif"][piexif.ExifIFD.ExposureTime] = [parseInt(parts[0]), parseInt(parts[1])];
                 }
             }
-            
+
             if (data.focal) {
                 exif["Exif"][piexif.ExifIFD.FocalLength] = [parseInt(data.focal), 1];
             }
 
             const date = new Date(timestamp);
             const dateStr = `${date.getFullYear()}:${String(date.getMonth() + 1).padStart(2, '0')}:${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
-            
+
             exif["0th"][piexif.ImageIFD.DateTime] = dateStr;
             exif["Exif"][piexif.ExifIFD.DateTimeOriginal] = dateStr;
             exif["Exif"][piexif.ExifIFD.DateTimeDigitized] = dateStr;
@@ -1166,7 +1327,7 @@
             if (data.latitude && data.longitude) {
                 const lat = parseFloat(data.latitude);
                 const lon = parseFloat(data.longitude);
-                
+
                 exif["GPS"][piexif.GPSIFD.GPSLatitudeRef] = lat >= 0 ? "N" : "S";
                 exif["GPS"][piexif.GPSIFD.GPSLatitude] = degToDms(Math.abs(lat));
                 exif["GPS"][piexif.GPSIFD.GPSLongitudeRef] = lon >= 0 ? "E" : "W";
@@ -1259,14 +1420,30 @@
         DOM.cameraBrand.addEventListener('change', (e) => {
             const brand = e.target.value;
             DOM.cameraModel.innerHTML = '<option value="">选择型号</option>';
-            if (brand && CAMERAS[brand]) {
-                CAMERAS[brand].forEach(model => {
-                    const opt = document.createElement('option');
-                    opt.value = model;
-                    opt.textContent = model;
-                    DOM.cameraModel.appendChild(opt);
-                });
-                DOM.cameraModel.disabled = false;
+            DOM.lensList.innerHTML = ''; // Clear lens options
+
+            if (brand) {
+                // Populate Camera Models
+                if (CAMERAS[brand]) {
+                    CAMERAS[brand].forEach(model => {
+                        const opt = document.createElement('option');
+                        opt.value = model;
+                        opt.textContent = model;
+                        DOM.cameraModel.appendChild(opt);
+                    });
+                    DOM.cameraModel.disabled = false;
+                } else {
+                    DOM.cameraModel.disabled = true;
+                }
+
+                // Populate Lens Options
+                if (LENSES[brand]) {
+                    LENSES[brand].forEach(lens => {
+                        const opt = document.createElement('option');
+                        opt.value = lens;
+                        DOM.lensList.appendChild(opt);
+                    });
+                }
             } else {
                 DOM.cameraModel.disabled = true;
             }
@@ -1322,6 +1499,16 @@
         DOM.resetBtn.addEventListener('click', () => {
             if (confirm('确定要重新开始吗？')) location.reload();
         });
+
+        // 初始化时间为当前时间
+        (function initDateTime() {
+            const now = new Date();
+            // Adjust to local timezone
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            DOM.dateTime.value = localISOTime;
+        })();
     </script>
 </body>
+
 </html>
