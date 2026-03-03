@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             min-height: 100vh;
@@ -21,7 +22,7 @@
             color: #1e293b;
             line-height: 1.6;
         }
-        
+
         .header {
             background: white;
             padding: 3rem 1.5rem 2rem;
@@ -29,7 +30,7 @@
             border-bottom: 1px solid #e2e8f0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .header h1 {
             font-size: 2.5rem;
             font-weight: 600;
@@ -40,18 +41,18 @@
             justify-content: center;
             gap: 0.75rem;
         }
-        
+
         .header-icon {
             font-size: 2.5rem;
             color: #64748b;
         }
-        
+
         .header p {
             font-size: 1.1rem;
             color: #64748b;
             font-weight: 400;
         }
-        
+
         .main-container {
             flex: 1;
             padding: 2rem 1.5rem;
@@ -59,14 +60,14 @@
             margin: 0 auto;
             width: 100%;
         }
-        
+
         .search-container {
             margin-bottom: 2rem;
             display: flex;
             justify-content: center;
             position: relative;
         }
-        
+
         .search-icon {
             position: absolute;
             left: 1.25rem;
@@ -76,7 +77,7 @@
             color: #64748b;
             pointer-events: none;
         }
-        
+
         .search-box {
             background: white;
             border: 1px solid #e2e8f0;
@@ -89,23 +90,23 @@
             transition: all 0.2s ease;
             color: #1e293b;
         }
-        
+
         .search-box::placeholder {
             color: #94a3b8;
         }
-        
+
         .search-box:focus {
             border-color: #0f172a;
             box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
         }
-        
+
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .tool-card {
             background: white;
             border: 1px solid #e2e8f0;
@@ -117,7 +118,7 @@
             transform: translateY(0);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .tool-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -125,7 +126,7 @@
             color: inherit;
             border-color: #cbd5e1;
         }
-        
+
         .tool-icon {
             font-size: 2.5rem;
             color: #64748b;
@@ -133,31 +134,31 @@
             display: block;
             transition: transform 0.2s ease;
         }
-        
+
         .tool-card:hover .tool-icon {
             transform: scale(1.05);
         }
-        
+
         .tool-title {
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #0f172a;
         }
-        
+
         .tool-description {
             font-size: 0.95rem;
             color: #64748b;
             line-height: 1.5;
             margin-bottom: 1rem;
         }
-        
+
         .tool-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
-        
+
         .tag {
             background: #f1f5f9;
             color: #475569;
@@ -167,24 +168,24 @@
             font-weight: 500;
             border: 1px solid #e2e8f0;
         }
-        
+
         .no-results {
             text-align: center;
             padding: 3rem 1rem;
             color: #64748b;
         }
-        
+
         .no-results-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
             color: #cbd5e1;
         }
-        
+
         .no-results h3 {
             color: #475569;
             margin-bottom: 0.5rem;
         }
-        
+
         .footer {
             background: white;
             border-top: 1px solid #e2e8f0;
@@ -194,219 +195,234 @@
             color: #64748b;
             box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .footer a {
             color: #0f172a;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
         }
-        
+
         .footer a:hover {
             color: #475569;
         }
-        
+
         /* Dark mode support */
         @media (prefers-color-scheme: dark) {
             body {
                 background: #0f172a;
                 color: #e2e8f0;
             }
-            
+
             .header {
                 background: #1e293b;
                 border-bottom-color: #334155;
             }
-            
+
             .header h1 {
                 color: #f8fafc;
             }
-            
+
             .header-icon {
                 color: #94a3b8;
             }
-            
+
             .header p {
                 color: #94a3b8;
             }
-            
+
             .search-box {
                 background: #1e293b;
                 border-color: #334155;
                 color: #e2e8f0;
             }
-            
+
             .search-box::placeholder {
                 color: #64748b;
             }
-            
+
             .search-box:focus {
                 border-color: #64748b;
                 box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.1);
             }
-            
+
             .search-icon {
                 color: #64748b;
             }
-            
+
             .tool-card {
                 background: #1e293b;
                 border-color: #334155;
             }
-            
+
             .tool-card:hover {
                 border-color: #475569;
             }
-            
+
             .tool-icon {
                 color: #94a3b8;
             }
-            
+
             .tool-title {
                 color: #f8fafc;
             }
-            
+
             .tool-description {
                 color: #94a3b8;
             }
-            
+
             .tag {
                 background: #334155;
                 color: #cbd5e1;
                 border-color: #475569;
             }
-            
+
             .no-results {
                 color: #94a3b8;
             }
-            
+
             .no-results-icon {
                 color: #475569;
             }
-            
+
             .no-results h3 {
                 color: #cbd5e1;
             }
-            
+
             .footer {
                 background: #1e293b;
                 border-top-color: #334155;
                 color: #94a3b8;
             }
-            
+
             .footer a {
                 color: #f8fafc;
             }
-            
+
             .footer a:hover {
                 color: #cbd5e1;
             }
         }
-        
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .header {
                 padding: 2rem 1rem 1.5rem;
             }
-            
+
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .header-icon {
                 font-size: 2rem;
             }
-            
+
             .header p {
                 font-size: 1rem;
             }
-            
+
             .main-container {
                 padding: 1.5rem 1rem;
             }
-            
+
             .tools-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
+
             .tool-card {
                 padding: 1.25rem;
             }
-            
+
             .search-box {
                 padding: 0.875rem 1.25rem 0.875rem 3.25rem;
                 font-size: 0.95rem;
             }
-            
+
             .search-icon {
                 left: 1rem;
                 font-size: 1.125rem;
             }
-            
+
             .footer {
                 padding: 0.75rem 1rem;
                 font-size: 0.8rem;
             }
         }
-        
+
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 1.75rem;
                 flex-direction: column;
                 gap: 0.5rem;
             }
-            
+
             .tool-icon {
                 font-size: 2rem;
             }
-            
+
             .tool-title {
                 font-size: 1.2rem;
             }
-            
+
             .tool-description {
                 font-size: 0.9rem;
             }
-            
+
             .search-box {
                 padding: 0.75rem 1rem 0.75rem 3rem;
                 font-size: 0.9rem;
             }
         }
-        
+
         /* Animation Effects */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .tool-card {
             animation: fadeInUp 0.4s ease-out;
         }
-        
-        .tool-card:nth-child(2) { animation-delay: 0.05s; }
-        .tool-card:nth-child(3) { animation-delay: 0.1s; }
-        .tool-card:nth-child(4) { animation-delay: 0.15s; }
-        .tool-card:nth-child(5) { animation-delay: 0.2s; }
-        .tool-card:nth-child(6) { animation-delay: 0.25s; }
-        
+
+        .tool-card:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .tool-card:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
+        .tool-card:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+
+        .tool-card:nth-child(5) {
+            animation-delay: 0.2s;
+        }
+
+        .tool-card:nth-child(6) {
+            animation-delay: 0.25s;
+        }
+
         .search-container {
             animation: fadeInUp 0.4s ease-out;
             animation-delay: 0.1s;
             animation-fill-mode: both;
         }
-        
+
         .header {
             animation: fadeInUp 0.4s ease-out;
         }
-        
+
         .footer {
             animation: fadeInUp 0.4s ease-out;
             animation-delay: 0.2s;
@@ -414,6 +430,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>
@@ -422,103 +439,44 @@
         </h1>
         <p>A collection of useful web-based utilities</p>
     </div>
-    
+
     <div class="main-container">
         <div class="search-container">
             <i class="ri-search-line search-icon"></i>
             <input type="text" class="search-box" id="searchBox" placeholder="Search tools...">
         </div>
-        
+
         <div class="tools-grid" id="toolsGrid">
             <!-- Tools will be dynamically inserted here -->
         </div>
-        
+
         <div class="no-results" id="noResults" style="display: none;">
             <i class="ri-search-line no-results-icon"></i>
             <h3>No tools found</h3>
             <p>Try adjusting your search terms</p>
         </div>
     </div>
-    
+
     <div class="footer">
         &copy; 2025 Web Tools Collection • Made with ❤️ • <a href="https://ceda.is/">Xuesong</a>
     </div>
-    
+
+    <script src="tools.js"></script>
     <script>
-        // 🔧 工具配置 - 在这里添加新工具
-        const tools = [
-            {
-                title: "HTML Renderer",
-                description: "实时 HTML 代码编辑器和预览工具，支持 HTML、CSS、JavaScript 代码片段的即时预览和测试。",
-                icon: "ri-code-line",
-                url: "/html-renderer.html",
-                tags: ["HTML", "CSS", "JavaScript", "Editor", "Preview"]
-            },
-            {
-                title: "微信封面合并",
-                description: "将两张不同比例的图片智能拼接为微信公众号封面。支持大图（2.35:1）和小图（1:1）的完美组合，一键生成符合微信规范的文章封面。",
-                icon: "ri-wechat-line",
-                url: "/wechat-cover-merge.html",
-                tags: ["微信", "图片", "合并", "封面", "公众号"]
-            },
-            {
-                title: "Google Font to Svg Path",
-                description: "将 Google font 转换为 SVG path 的工具",
-                icon: "ri-font-family",
-                url: "https://fontsvg.fylsen.com/",
-                tags: ["Font", "Google", "SVG"]
-            },
-            {
-                title: "IT-Tools",
-                description: "为开发者和 IT 行业从业者准备的实用工具集合",
-                icon: "ri-tools-line",
-                url: "https://tools.fylsen.com/",
-                tags: ["IT", "Google", "SVG"]
-            },
-            {
-                title: "TraceIt",
-                description: "在线图像矢量化工具，将位图快速转换为高质量SVG矢量图",
-                icon: "ri-image-line",
-                url: "/traceIt.html",
-                tags: ["图像处理", "矢量化", "SVG", "设计工具"]
-            },
-            {
-                title: "Image Overlay Editor",
-                description: "图片蒙版工具，图片上覆盖文字。",
-                icon: "ri-image-circle-line",
-                url: "/image-overlay-editor.html",
-                tags: ["图像处理", "文字工具", "设计工具"]
-            },
-            {
-                title: "Image EXIF Editor",
-                description: "添加图片EXIF 信息",
-                icon: "ri-image-edit-line",
-                url: "/exif-editor.html",
-                tags: ["图像处理", "文字工具", "设计工具"]
-            },
-            {
-                title: "Markdown Builder",
-                description: "Markdown 渲染",
-                icon: "ri-markdown-line",
-                url: "/markdown-builder.html",
-                tags: ["文字工具", "设计工具"]
-            },
-        ];
-        
         // 渲染工具卡片
         function renderTools(toolsToRender = tools) {
             const toolsGrid = document.getElementById('toolsGrid');
             const noResults = document.getElementById('noResults');
-            
+
             if (toolsToRender.length === 0) {
                 toolsGrid.style.display = 'none';
                 noResults.style.display = 'block';
                 return;
             }
-            
+
             toolsGrid.style.display = 'grid';
             noResults.style.display = 'none';
-            
+
             toolsGrid.innerHTML = toolsToRender.map(tool => `
                 <a href="${tool.url}" class="tool-card">
                     <i class="${tool.icon} tool-icon"></i>
@@ -530,37 +488,37 @@
                 </a>
             `).join('');
         }
-        
+
         // 搜索功能
         function searchTools(query) {
             const filteredTools = tools.filter(tool => {
                 const searchText = query.toLowerCase();
                 return tool.title.toLowerCase().includes(searchText) ||
-                       tool.description.toLowerCase().includes(searchText) ||
-                       tool.tags.some(tag => tag.toLowerCase().includes(searchText));
+                    tool.description.toLowerCase().includes(searchText) ||
+                    tool.tags.some(tag => tag.toLowerCase().includes(searchText));
             });
-            
+
             renderTools(filteredTools);
         }
-        
+
         // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             renderTools();
-            
+
             const searchBox = document.getElementById('searchBox');
-            searchBox.addEventListener('input', function() {
+            searchBox.addEventListener('input', function () {
                 searchTools(this.value);
             });
         });
-        
+
         // 键盘快捷键
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // Ctrl/Cmd + K 聚焦搜索框
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 document.getElementById('searchBox').focus();
             }
-            
+
             // ESC 清空搜索
             if (e.key === 'Escape') {
                 const searchBox = document.getElementById('searchBox');
@@ -571,4 +529,5 @@
         });
     </script>
 </body>
+
 </html>
