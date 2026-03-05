@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Generator - Web Tools</title>
+    <meta name="description" content="Generate MD5, SHA-1, SHA-256 and other hashes securely in-browser.">
+    <meta name="tool-icon" content="ri-hashtag">
+    <meta name="tool-tags" content="Hash, Crypto, MD5, SHA256, Security">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #3b82f6;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 1.5rem 2rem;
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .panel {
+            background: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1.5rem;
+            border: none;
+            resize: vertical;
+            background: transparent;
+            color: var(--text-color);
+            font-family: ui-monospace, monospace;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .hash-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hash-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hash-item:last-child {
+            border-bottom: none;
+        }
+
+        .alg-name {
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+
+        .hash-val {
+            font-family: ui-monospace, monospace;
+            word-break: break-all;
+            color: var(--text-color);
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-hashtag text-primary"></i> Hash Generator</h1>
+    </header>
+
+    <main class="container">
+        <div class="panel">
+            <div class="panel-header">
+                Input Text
+                <button class="btn-icon" style="border:none;"
+                    onclick="document.getElementById('inputStr').value=''; generateHashes();"><i
+                        class="ri-delete-bin-line"></i> Clear</button>
+            </div>
+            <textarea id="inputStr" placeholder="Type text here to generate hashes instantly..."
+                oninput="generateHashes()">Hello World</textarea>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">Results</div>
+            <div class="hash-list">
+                <div class="hash-item">
+                    <div class="alg-name">MD5</div>
+                    <div class="hash-val" id="res_md5">-</div>
+                    <button class="btn-icon" onclick="copyHash('res_md5')" title="Copy"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+                <div class="hash-item">
+                    <div class="alg-name">SHA-1</div>
+                    <div class="hash-val" id="res_sha1">-</div>
+                    <button class="btn-icon" onclick="copyHash('res_sha1')" title="Copy"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+                <div class="hash-item">
+                    <div class="alg-name">SHA-256</div>
+                    <div class="hash-val" id="res_sha256">-</div>
+                    <button class="btn-icon" onclick="copyHash('res_sha256')" title="Copy"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+                <div class="hash-item">
+                    <div class="alg-name">SHA-512</div>
+                    <div class="hash-val" id="res_sha512">-</div>
+                    <button class="btn-icon" onclick="copyHash('res_sha512')" title="Copy"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function generateHashes() {
+            const input = document.getElementById('inputStr').value;
+            if (!input) {
+                document.getElementById('res_md5').innerText = '-';
+                document.getElementById('res_sha1').innerText = '-';
+                document.getElementById('res_sha256').innerText = '-';
+                document.getElementById('res_sha512').innerText = '-';
+                return;
+            }
+
+            // CryptoJS handles utf8 naturally
+            document.getElementById('res_md5').innerText = CryptoJS.MD5(input).toString();
+            document.getElementById('res_sha1').innerText = CryptoJS.SHA1(input).toString();
+            document.getElementById('res_sha256').innerText = CryptoJS.SHA256(input).toString();
+            document.getElementById('res_sha512').innerText = CryptoJS.SHA512(input).toString();
+        }
+
+        async function copyHash(id) {
+            const val = document.getElementById(id).innerText;
+            if (val === '-') return;
+            try {
+                await navigator.clipboard.writeText(val);
+                alert('Copied to clipboard');
+            } catch (e) { }
+        }
+
+        // init
+        generateHashes();
+    </script>
+</body>
+
+</html>

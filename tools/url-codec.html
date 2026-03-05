@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Encoder/Decoder - Web Tools</title>
+    <meta name="description" content="Free online tool to safely encode or decode URLs and URI query parameters.">
+    <meta name="tool-icon" content="ri-links-line">
+    <meta name="tool-tags" content="URL, Encode, Decode, Developer Tools">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #3b82f6;
+                --primary-hover: #60a5fa;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .panel-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(0, 0, 0, 0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1.5rem;
+            border: none;
+            resize: vertical;
+            background: transparent;
+            color: var(--text-color);
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 1rem;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-links-line text-primary"></i> URL Encoder/Decoder</h1>
+    </header>
+
+    <main class="container">
+        <div class="panel">
+            <div class="panel-header">
+                <span>Input</span>
+                <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"
+                    onclick="document.getElementById('inputStr').value=''; document.getElementById('inputStr').focus();">
+                    <i class="ri-delete-bin-line"></i> Clear
+                </button>
+            </div>
+            <textarea id="inputStr" placeholder="Enter URL or text to encode/decode here..."></textarea>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn" onclick="processUrl('encode')"><i class="ri-lock-2-line"></i> Encode</button>
+            <button class="btn" onclick="processUrl('decode')" style="background-color: var(--text-color);"><i
+                    class="ri-lock-unlock-line"></i> Decode</button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>Result</span>
+                <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"
+                    onclick="copyResult()">
+                    <i class="ri-clipboard-line"></i> Copy
+                </button>
+            </div>
+            <textarea id="outputStr" readonly placeholder="Result will appear here..."></textarea>
+        </div>
+    </main>
+
+    <script>
+        const inputEl = document.getElementById('inputStr');
+        const outputEl = document.getElementById('outputStr');
+
+        function processUrl(action) {
+            const raw = inputEl.value;
+            if (!raw) {
+                outputEl.value = '';
+                return;
+            }
+
+            try {
+                if (action === 'encode') {
+                    // encodeURIComponent is safer for individual params, 
+                    // but users often paste full URLs.
+                    // We'll use encodeURI for basic safety, but perhaps provide encodeURIComponent as default.
+                    outputEl.value = encodeURIComponent(raw);
+                } else {
+                    outputEl.value = decodeURIComponent(raw.replace(/\+/g, ' '));
+                }
+            } catch (e) {
+                outputEl.value = "Error: " + e.message;
+            }
+        }
+
+        async function copyResult() {
+            if (!outputEl.value) return;
+            try {
+                await navigator.clipboard.writeText(outputEl.value);
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="ri-check-line"></i> Copied';
+                setTimeout(() => btn.innerHTML = orig, 2000);
+            } catch (err) {
+                alert("Failed to copy");
+            }
+        }
+    </script>
+</body>
+
+</html>

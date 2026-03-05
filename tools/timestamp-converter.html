@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Timestamp Converter - Web Tools</title>
+    <meta name="description" content="Convert Unix timestamps to readable dates and vice versa.">
+    <meta name="tool-icon" content="ri-time-line">
+    <meta name="tool-tags" content="Timestamp, Unix, Date, Epoch, Developer Tools">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #f97316;
+            --primary-hover: #ea580c;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #f97316;
+                --primary-hover: #ea580c;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .current-time {
+            text-align: center;
+            padding: 2rem;
+            background: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .current-time h2 {
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-timestamp {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .grid-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .panel h3 {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="number"],
+        input[type="datetime-local"],
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--surface-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .result-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-time-line text-primary"></i> Timestamp Converter</h1>
+    </header>
+
+    <main class="container">
+        <div class="current-time">
+            <h2>Current Epoch (Seconds)</h2>
+            <div class="current-timestamp" id="currentTs" onclick="copyTs(this.innerText)">Loading...</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;" id="currentDateStr"></p>
+        </div>
+
+        <div class="grid-panel">
+            <div class="panel">
+                <h3><i class="ri-arrow-right-circle-line"></i> Timestamp to Date</h3>
+                <div class="input-group">
+                    <input type="number" id="tsInput" placeholder="e.g. 1700000000" oninput="tsToDate()">
+                </div>
+                <div class="result-box" id="tsResult">Result will appear here...</div>
+            </div>
+
+            <div class="panel">
+                <h3><i class="ri-arrow-left-circle-line"></i> Date to Timestamp</h3>
+                <div class="input-group">
+                    <input type="datetime-local" id="dateInput" step="1" onchange="dateToTs()">
+                </div>
+                <div class="result-box" id="dateResult">Result will appear here...</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Update Live clock
+        function updateClock() {
+            const now = new Date();
+            const ts = Math.floor(now.getTime() / 1000);
+            document.getElementById('currentTs').innerText = ts;
+            document.getElementById('currentDateStr').innerText = now.toLocaleString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        async function copyTs(val) {
+            try {
+                await navigator.clipboard.writeText(val);
+                alert("Timestamp copied!");
+            } catch (e) { }
+        }
+
+        function tsToDate() {
+            let val = document.getElementById('tsInput').value;
+            if (!val) { document.getElementById('tsResult').innerHTML = "Result will appear here..."; return; }
+
+            // Auto detect millis vs seconds
+            let v = parseInt(val);
+            if (val.length <= 10) v *= 1000;
+
+            const date = new Date(v);
+            if (isNaN(date.getTime())) {
+                document.getElementById('tsResult').innerHTML = "Invalid timestamp";
+            } else {
+                document.getElementById('tsResult').innerHTML = `
+                    <b>Local:</b> ${date.toLocaleString()}<br>
+                    <b>GMT:</b> ${date.toUTCString()}<br>
+                    <b>ISO:</b> ${date.toISOString()}
+                `;
+            }
+        }
+
+        function dateToTs() {
+            const val = document.getElementById('dateInput').value;
+            if (!val) { document.getElementById('dateResult').innerHTML = "Result will appear here..."; return; }
+
+            const date = new Date(val);
+            const tsFormat = Math.floor(date.getTime() / 1000);
+
+            if (isNaN(tsFormat)) {
+                document.getElementById('dateResult').innerHTML = "Invalid date";
+            } else {
+                document.getElementById('dateResult').innerHTML = `
+                    <b>Seconds:</b> ${tsFormat}<br>
+                    <b>Milliseconds:</b> ${date.getTime()}
+                `;
+            }
+        }
+    </script>
+</body>
+
+</html>

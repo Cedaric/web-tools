@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID/GUID Generator - Web Tools</title>
+    <meta name="description" content="Generate random v4 UUIDs (Universally Unique Identifiers) instantly.">
+    <meta name="tool-icon" content="ri-fingerprint-line">
+    <meta name="tool-tags" content="UUID, GUID, Generator, Developer Tools">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #8b5cf6;
+                --primary-hover: #a78bfa;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .uuid-display {
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px dashed var(--border-color);
+            width: 100%;
+            text-align: center;
+            word-break: break-all;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .uuid-display:hover {
+            border-color: var(--primary-color);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .uuid-display:active {
+            transform: scale(0.98);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .uuid-display:hover .tooltip {
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .panel {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .options-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .options-group label {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .multi-gen {
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .multi-gen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            color: var(--text-color);
+            font-family: ui-monospace, monospace;
+            resize: vertical;
+        }
+
+        input[type="number"] {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: var(--surface-color);
+            color: var(--text-color);
+            width: 80px;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-fingerprint-line text-primary"></i> UUID / GUID Generator</h1>
+    </header>
+
+    <main class="container">
+        <div class="uuid-display" onclick="copyMainUuid()">
+            <span class="tooltip" id="tooltipMsg">Click to copy</span>
+            <span id="mainUuid">Loading...</span>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="generateMainUuid()">
+                <i class="ri-refresh-line"></i> Generate New UUID
+            </button>
+        </div>
+
+        <div class="panel">
+            <div class="options-group">
+                <label>
+                    <input type="checkbox" id="uppercaseCheck" onchange="generateMainUuid()">
+                    Uppercase
+                </label>
+                <label>
+                    <input type="checkbox" id="bracesCheck" onchange="generateMainUuid()">
+                    Include Braces { }
+                </label>
+                <label>
+                    <input type="checkbox" id="hyphensCheck" checked onchange="generateMainUuid()">
+                    Include Hyphens -
+                </label>
+            </div>
+        </div>
+
+        <div class="multi-gen">
+            <div class="multi-gen-header">
+                <h3>Generate Multiple</h3>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <input type="number" id="genCount" value="10" min="1" max="1000">
+                    <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;"
+                        onclick="generateMultiple()">Generate</button>
+                    <button class="btn"
+                        style="background: var(--text-muted); padding: 0.5rem 1rem; font-size: 0.9rem; box-shadow: none;"
+                        onclick="copyMulti()">Copy All</button>
+                </div>
+            </div>
+            <textarea id="multiOutput" readonly></textarea>
+        </div>
+    </main>
+
+    <script>
+        // Use crypto.randomUUID if available, else fallback
+        function generateUUIDv4() {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function formatUUID(uuid) {
+            let res = uuid;
+            res = document.getElementById('uppercaseCheck').checked ? res.toUpperCase() : res.toLowerCase();
+            if (!document.getElementById('hyphensCheck').checked) {
+                res = res.replace(/-/g, '');
+            }
+            if (document.getElementById('bracesCheck').checked) {
+                res = `{${res}}`;
+            }
+            return res;
+        }
+
+        function generateMainUuid() {
+            const raw = generateUUIDv4();
+            document.getElementById('mainUuid').textContent = formatUUID(raw);
+        }
+
+        async function copyMainUuid() {
+            const text = document.getElementById('mainUuid').textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                const t = document.getElementById('tooltipMsg');
+                t.textContent = 'Copied!';
+                setTimeout(() => { t.textContent = 'Click to copy'; }, 2000);
+            } catch (e) { }
+        }
+
+        function generateMultiple() {
+            const count = parseInt(document.getElementById('genCount').value) || 10;
+            const validCount = Math.min(Math.max(count, 1), 5000); // hard limit 5000
+
+            let result = '';
+            for (let i = 0; i < validCount; i++) {
+                result += formatUUID(generateUUIDv4()) + '\n';
+            }
+            document.getElementById('multiOutput').value = result;
+        }
+
+        async function copyMulti() {
+            const val = document.getElementById('multiOutput').value;
+            if (!val) return;
+            try {
+                await navigator.clipboard.writeText(val);
+                alert('Copied all UUIDs to clipboard');
+            } catch (e) { }
+        }
+
+        // Init
+        generateMainUuid();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Format Converter - Web Tools</title>
+    <meta name="description" content="Online color format converter. Convert between HEX, RGB, HSL, and more.">
+    <meta name="tool-icon" content="ri-palette-line">
+    <meta name="tool-tags" content="Color, HEX, RGB, CSS, Design">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #ec4899;
+            --primary-hover: #db2777;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #f472b6;
+                --primary-hover: #ec4899;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background-color: #ec4899;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .color-picker-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #nativeColorPicker {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .panel {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--surface-color);
+            color: var(--text-color);
+            font-family: ui-monospace, monospace;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn:hover {
+            background: var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-palette-line text-primary"></i> Color Converter</h1>
+    </header>
+
+    <main class="container">
+        <div class="color-preview" id="colorPreview">
+            <label class="color-picker-btn">
+                <i class="ri-color-filter-line"></i> Pick Color
+                <input type="color" id="nativeColorPicker" value="#ec4899">
+            </label>
+        </div>
+
+        <div class="panel">
+            <div class="input-group">
+                <label>HEX</label>
+                <div class="input-row">
+                    <input type="text" id="hexInput" value="#EC4899">
+                    <button class="copy-btn" onclick="copyToClipboard('hexInput')"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>RGB / RGBA</label>
+                <div class="input-row">
+                    <input type="text" id="rgbInput" value="rgb(236, 72, 153)">
+                    <button class="copy-btn" onclick="copyToClipboard('rgbInput')"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>HSL</label>
+                <div class="input-row">
+                    <input type="text" id="hslInput" value="hsl(330, 81%, 60%)">
+                    <button class="copy-btn" onclick="copyToClipboard('hslInput')"><i
+                            class="ri-clipboard-line"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const preview = document.getElementById('colorPreview');
+        const picker = document.getElementById('nativeColorPicker');
+        const hex = document.getElementById('hexInput');
+        const rgb = document.getElementById('rgbInput');
+        const hsl = document.getElementById('hslInput');
+
+        // Utils
+        function hexToRgb(h) {
+            let r = 0, g = 0, b = 0, a = 1;
+            h = h.replace('#', '');
+            if (h.length === 3) {
+                r = parseInt(h[0] + h[0], 16); g = parseInt(h[1] + h[1], 16); b = parseInt(h[2] + h[2], 16);
+            } else if (h.length === 6) {
+                r = parseInt(h.substring(0, 2), 16); g = parseInt(h.substring(2, 4), 16); b = parseInt(h.substring(4, 6), 16);
+            } else if (h.length === 8) {
+                r = parseInt(h.substring(0, 2), 16); g = parseInt(h.substring(2, 4), 16); b = parseInt(h.substring(4, 6), 16);
+                a = (parseInt(h.substring(6, 8), 16) / 255).toFixed(2);
+            }
+            return { r, g, b, a: parseFloat(a) };
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            let max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max == min) { h = s = 0; }
+            else {
+                let d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+        }
+
+        function isValidHex(hex) { return /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{8})$/.test(hex); }
+
+        function updateFromHex(h) {
+            if (!isValidHex(h)) return;
+            const c = hexToRgb(h);
+            const hl = rgbToHsl(c.r, c.g, c.b);
+
+            let hstr = h.startsWith('#') ? h : '#' + h;
+            preview.style.backgroundColor = hstr;
+            picker.value = hstr.substring(0, 7); // color picker doesn't support alpha
+
+            if (c.a === 1) rgb.value = `rgb(${c.r}, ${c.g}, ${c.b})`;
+            else rgb.value = `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a})`;
+
+            if (c.a === 1) hsl.value = `hsl(${hl.h}, ${hl.s}%, ${hl.l}%)`;
+            else hsl.value = `hsla(${hl.h}, ${hl.s}%, ${hl.l}%, ${c.a})`;
+        }
+
+        function parseRgbString(str) {
+            const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+            if (!m) return null;
+            return { r: parseInt(m[1]), g: parseInt(m[2]), b: parseInt(m[3]), a: m[4] ? parseFloat(m[4]) : 1 };
+        }
+
+        function updateFromRgb(rStr) {
+            const c = parseRgbString(rStr);
+            if (!c) return;
+
+            const toHex = (n) => {
+                const hex = n.toString(16);
+                return hex.length === 1 ? "0" + hex : hex;
+            };
+
+            let hStr = `#${toHex(c.r)}${toHex(c.g)}${toHex(c.b)}`;
+            if (c.a !== 1) hStr += toHex(Math.round(c.a * 255));
+
+            hex.value = hStr.toUpperCase();
+            updateFromHex(hStr);
+        }
+
+        // Listeners
+        hex.addEventListener('input', (e) => updateFromHex(e.target.value));
+        rgb.addEventListener('input', (e) => updateFromRgb(e.target.value));
+        picker.addEventListener('input', (e) => {
+            hex.value = e.target.value.toUpperCase();
+            updateFromHex(e.target.value);
+        });
+
+        async function copyToClipboard(id) {
+            const val = document.getElementById(id).value;
+            try {
+                await navigator.clipboard.writeText(val);
+                alert("Copied: " + val);
+            } catch (err) { }
+        }
+    </script>
+</body>
+
+</html>

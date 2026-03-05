@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch - Web Tools</title>
+    <meta name="description" content="Online stopwatch with split lap times.">
+    <meta name="tool-icon" content="ri-stopwatch-line">
+    <meta name="tool-tags" content="Stopwatch, Timer, Time, Utility">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #14b8a6;
+            --primary-hover: #0d9488;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 1.5rem 2rem;
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .timer-display {
+            font-variant-numeric: tabular-nums;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .timer-ms {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--surface-color);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg-color);
+        }
+
+        .btn.start {
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .btn.start:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .btn.stop {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .btn.stop:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .laps-container {
+            width: 100%;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            max-height: 300px;
+        }
+
+        .laps-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .laps-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .lap-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-family: ui-monospace, monospace;
+        }
+
+        .lap-item:last-child {
+            border-bottom: none;
+        }
+
+        .lap-num {
+            color: var(--text-muted);
+        }
+
+        .lap-time {
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .timer-display {
+                font-size: 4rem;
+            }
+
+            .timer-ms {
+                font-size: 2rem;
+            }
+
+            .btn {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-stopwatch-line text-primary"></i> Stopwatch</h1>
+    </header>
+
+    <main class="container">
+        <div class="timer-display">
+            <span id="mins">00</span>:<span id="secs">00</span><span class="timer-ms">.<span id="ms">00</span></span>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="lapResetBtn" onclick="handleLapReset()">Lap</button>
+            <button class="btn start" id="startStopBtn" onclick="handleStartStop()">Start</button>
+        </div>
+
+        <div class="laps-container">
+            <div class="laps-header">
+                <span>Laps</span>
+            </div>
+            <ul class="laps-list" id="lapsList">
+                <!-- Laps go here -->
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        const btnStartStop = document.getElementById('startStopBtn');
+        const btnLapReset = document.getElementById('lapResetBtn');
+        const minEl = document.getElementById('mins');
+        const secEl = document.getElementById('secs');
+        const msEl = document.getElementById('ms');
+        const lapsList = document.getElementById('lapsList');
+
+        let isRunning = false;
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+        let laps = [];
+
+        function formatTime(time) {
+            let d = new Date(time);
+            let m = d.getUTCMinutes().toString().padStart(2, '0');
+            let s = d.getUTCSeconds().toString().padStart(2, '0');
+            let ms = Math.floor(d.getUTCMilliseconds() / 10).toString().padStart(2, '0'); // show two digits ms
+            return { m, s, ms };
+        }
+
+        function updateDisplay() {
+            let t = formatTime(elapsedTime);
+            minEl.innerText = t.m;
+            secEl.innerText = t.s;
+            msEl.innerText = t.ms;
+        }
+
+        function handleStartStop() {
+            if (isRunning) {
+                // Stop
+                clearInterval(timerInterval);
+                btnStartStop.innerText = "Start";
+                btnStartStop.className = "btn start";
+                btnLapReset.innerText = "Reset";
+            } else {
+                // Start
+                startTime = Date.now() - elapsedTime;
+                timerInterval = setInterval(() => {
+                    elapsedTime = Date.now() - startTime;
+                    updateDisplay();
+                }, 10);
+
+                btnStartStop.innerText = "Stop";
+                btnStartStop.className = "btn stop";
+                btnLapReset.innerText = "Lap";
+            }
+            isRunning = !isRunning;
+        }
+
+        function handleLapReset() {
+            if (isRunning) {
+                // Lap
+                const lapTime = elapsedTime;
+                laps.unshift(lapTime); // add to top
+                renderLaps();
+            } else {
+                // Reset
+                elapsedTime = 0;
+                laps = [];
+                updateDisplay();
+                renderLaps();
+                btnLapReset.innerText = "Lap";
+            }
+        }
+
+        function renderLaps() {
+            lapsList.innerHTML = '';
+            laps.forEach((lap, index) => {
+                const num = laps.length - index;
+                const t = formatTime(lap);
+                const str = `${t.m}:${t.s}.${t.ms}`;
+
+                const li = document.createElement('li');
+                li.className = 'lap-item';
+                li.innerHTML = `<span class="lap-num">Lap ${num}</span><span class="lap-time">${str}</span>`;
+                lapsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+
+</html>

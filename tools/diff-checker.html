@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Diff Checker - Web Tools</title>
+    <meta name="description" content="Compare two text snippets side by side and find the differences.">
+    <meta name="tool-icon" content="ri-file-transfer-line">
+    <meta name="tool-tags" content="Diff, Compare, Text, Developer Tools">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Using jsdiff for diffing logic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/7.0.0/diff.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #059669;
+            --primary-hover: #047857;
+            --text-muted: #64748b;
+
+            --diff-add-bg: #dcfce7;
+            --diff-add-text: #166534;
+            --diff-rem-bg: #fee2e2;
+            --diff-rem-text: #991b1b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+
+                --diff-add-bg: rgba(22, 101, 52, 0.4);
+                --diff-add-text: #86efac;
+                --diff-rem-bg: rgba(153, 27, 27, 0.4);
+                --diff-rem-text: #fca5a5;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 1rem;
+            background: var(--surface-color);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            /* Using flex 1 ensures height grows */
+            min-height: 300px;
+            flex: 1;
+        }
+
+        @media (max-width: 900px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            resize: none;
+            background: transparent;
+            color: var(--text-color);
+            font-family: ui-monospace, monospace;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .diff-output-panel {
+            background: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            min-height: 200px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .diff-inner {
+            padding: 1rem;
+            font-family: ui-monospace, monospace;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+        }
+
+        .diff-inner del {
+            text-decoration: none;
+            background-color: var(--diff-rem-bg);
+            color: var(--diff-rem-text);
+        }
+
+        .diff-inner ins {
+            text-decoration: none;
+            background-color: var(--diff-add-bg);
+            color: var(--diff-add-text);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-file-transfer-line text-primary"></i> Text Diff Checker</h1>
+    </header>
+
+    <main class="container">
+        <div class="toolbar">
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" onclick="compareText()"><i class="ri-git-merge-line"></i> Compare Texts</button>
+                <button class="btn"
+                    style="background: transparent; border: 1px solid var(--border-color); color: var(--text-color);"
+                    onclick="clearAll()"><i class="ri-delete-bin-line"></i> Clear</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.9rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="radio" name="mode"
+                        value="chars" checked> Character level</label>
+                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="radio" name="mode"
+                        value="words"> Word level</label>
+                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="radio" name="mode"
+                        value="lines"> Line level</label>
+            </div>
+        </div>
+
+        <div class="editor-grid" id="editorGrid">
+            <div class="panel">
+                <div class="panel-header">Original Text</div>
+                <textarea id="origInput" placeholder="Paste original text here..."></textarea>
+            </div>
+            <div class="panel">
+                <div class="panel-header">Modified Text</div>
+                <textarea id="modInput" placeholder="Paste changed text here..."></textarea>
+            </div>
+        </div>
+
+        <div class="diff-output-panel" id="diffPanel">
+            <div class="panel-header">Result (Red = removed, Green = added)</div>
+            <div class="diff-inner" id="diffOutput"></div>
+        </div>
+    </main>
+
+    <script>
+        const origIn = document.getElementById('origInput');
+        const modIn = document.getElementById('modInput');
+        const diffPanel = document.getElementById('diffPanel');
+        const diffOut = document.getElementById('diffOutput');
+
+        function getMode() {
+            return document.querySelector('input[name="mode"]:checked').value;
+        }
+
+        function loadSample() {
+            origIn.value = "The quick brown fox jumps over the lazy dog.\n\nHello World!";
+            modIn.value = "A quick red fox jumps over the sleeping dog.\n\nHello Universe!";
+        }
+
+        function compareText() {
+            const orig = origIn.value;
+            const mod = modIn.value;
+
+            if (!orig && !mod) return;
+
+            const mode = getMode();
+            let diff;
+
+            if (mode === 'chars') {
+                diff = Diff.diffChars(orig, mod);
+            } else if (mode === 'words') {
+                diff = Diff.diffWordsWithSpace(orig, mod);
+            } else {
+                diff = Diff.diffLines(orig, mod);
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            diff.forEach(part => {
+                const node = document.createElement(part.added ? 'ins' : part.removed ? 'del' : 'span');
+                node.appendChild(document.createTextNode(part.value));
+                fragment.appendChild(node);
+            });
+
+            diffOut.innerHTML = '';
+            diffOut.appendChild(fragment);
+            diffPanel.style.display = 'block';
+
+            // scroll to result
+            diffPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearAll() {
+            origIn.value = '';
+            modIn.value = '';
+            diffPanel.style.display = 'none';
+        }
+
+        // if empty, load dummy to prompt users
+        if (!origIn.value) loadSample();
+    </script>
+</body>
+
+</html>

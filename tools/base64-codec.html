@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder/Decoder - Web Tools</title>
+    <meta name="description" content="Free online tool to encode text and data to Base64 or decode Base64 back to text.">
+    <meta name="tool-icon" content="ri-lock-unlock-line">
+    <meta name="tool-tags" content="Base64, Encode, Decode, Security">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #3b82f6;
+                --primary-hover: #60a5fa;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .header a:hover { color: var(--text-color); }
+
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .panel-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        .panel-title { font-weight: 600; font-size: 1.1rem; }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            min-height: 300px;
+            padding: 1.5rem;
+            border: none;
+            resize: none;
+            background: transparent;
+            color: var(--text-color);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover { background-color: var(--primary-hover); }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-lock-unlock-line text-primary"></i> Base64 Encoder/Decoder</h1>
+    </header>
+
+    <main class="container">
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Plain Text</span>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="clearText('plain')"><i class="ri-delete-bin-line"></i> Clear</button>
+                    <button class="btn" onclick="copyText('plain')"><i class="ri-clipboard-line"></i> Copy</button>
+                </div>
+            </div>
+            <textarea id="plain" placeholder="Type or paste plain text here..."></textarea>
+            <div class="panel-header" style="border-top: 1px solid var(--border-color); border-bottom: none;">
+                <span style="font-size: 0.85rem; color: var(--text-muted);" id="plainStats">0 characters</span>
+                <button class="btn" onclick="encodeBase64()">Encode <i class="ri-arrow-right-line"></i></button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Base64 Encoded</span>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="clearText('base64')"><i class="ri-delete-bin-line"></i> Clear</button>
+                    <button class="btn" onclick="copyText('base64')"><i class="ri-clipboard-line"></i> Copy</button>
+                </div>
+            </div>
+            <textarea id="base64" placeholder="Type or paste Base64 here..."></textarea>
+            <div class="panel-header" style="border-top: 1px solid var(--border-color); border-bottom: none;">
+                <button class="btn" onclick="decodeBase64()"><i class="ri-arrow-left-line"></i> Decode</button>
+                <span style="font-size: 0.85rem; color: var(--text-muted);" id="base64Stats">0 characters</span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        &copy; 2025 Web Tools Collection
+    </footer>
+
+    <script>
+        const plainEl = document.getElementById('plain');
+        const base64El = document.getElementById('base64');
+        const plainStatsEl = document.getElementById('plainStats');
+        const base64StatsEl = document.getElementById('base64Stats');
+
+        function updateStats() {
+            plainStatsEl.textContent = `${plainEl.value.length} characters`;
+            base64StatsEl.textContent = `${base64El.value.length} characters`;
+        }
+
+        plainEl.addEventListener('input', () => {
+            updateStats();
+            encodeBase64();
+        });
+
+        base64El.addEventListener('input', () => {
+            updateStats();
+            decodeBase64();
+        });
+
+        function encodeBase64() {
+            try {
+                // Handle unicode characters properly
+                const text = plainEl.value;
+                const encoded = btoa(unescape(encodeURIComponent(text)));
+                base64El.value = encoded;
+                updateStats();
+            } catch (e) {
+                console.error("Encoding error:", e);
+            }
+        }
+
+        function decodeBase64() {
+            try {
+                const text = base64El.value;
+                if (!text) {
+                    plainEl.value = '';
+                    updateStats();
+                    return;
+                }
+                const decoded = decodeURIComponent(escape(atob(text)));
+                plainEl.value = decoded;
+                updateStats();
+            } catch (e) {
+                // Invalid base64, don't update plain text to allow fixing
+            }
+        }
+
+        function clearText(type) {
+            if (type === 'plain') {
+                plainEl.value = '';
+                base64El.value = '';
+            } else {
+                base64El.value = '';
+                plainEl.value = '';
+            }
+            updateStats();
+        }
+
+        async function copyText(type) {
+            const el = type === 'plain' ? plainEl : base64El;
+            try {
+                await navigator.clipboard.writeText(el.value);
+                const btn = event.currentTarget;
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="ri-check-line"></i> Copied';
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                alert("Failed to copy. Please copy manually.");
+                el.select();
+            }
+        }
+    </script>
+</body>
+</html>

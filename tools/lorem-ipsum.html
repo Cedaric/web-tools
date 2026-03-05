@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem Ipsum Generator - Web Tools</title>
+    <meta name="description" content="Generate random placeholder text (Lorem Ipsum) for your designs.">
+    <meta name="tool-icon" content="ri-text-line">
+    <meta name="tool-tags" content="Lorem Ipsum, Placeholder, Design, Text">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #14b8a6;
+            --primary-hover: #0d9488;
+            --text-muted: #64748b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #14b8a6;
+                --primary-hover: #2dd4bf;
+                --text-muted: #94a3b8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 1.5rem 2rem;
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .controls {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-end;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        input[type="number"] {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            width: 120px;
+            outline: none;
+        }
+
+        select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            height: 48px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .result-panel {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex: 1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .result-content {
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .result-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .result-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-copy:hover {
+            background: var(--border-color);
+            transform: none;
+            box-shadow: none;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-text-line text-primary"></i> Lorem Ipsum Generator</h1>
+    </header>
+
+    <main class="container">
+        <div class="controls">
+            <div class="input-group">
+                <label>Count</label>
+                <input type="number" id="genCount" value="5" min="1" max="100">
+            </div>
+
+            <div class="input-group">
+                <label>Type</label>
+                <select id="genType">
+                    <option value="paragraphs">Paragraphs</option>
+                    <option value="sentences">Sentences</option>
+                    <option value="words">Words</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label style="opacity: 0;">.</label>
+                <label
+                    style="display: flex; align-items: center; gap: 0.5rem; height: 48px; margin: 0; cursor: pointer;">
+                    <input type="checkbox" id="startWith" checked>
+                    Start with 'Lorem ipsum...'
+                </label>
+            </div>
+
+            <div style="flex: 1;"></div>
+
+            <button class="btn" onclick="generate()"><i class="ri-refresh-line"></i> Generate</button>
+        </div>
+
+        <div class="result-panel">
+            <div class="result-header">
+                <span id="resInfo">Result</span>
+                <button class="btn btn-copy" style="height: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;"
+                    onclick="copyResult()">
+                    <i class="ri-clipboard-line"></i> Copy
+                </button>
+            </div>
+            <div class="result-content" id="resultBox"></div>
+        </div>
+    </main>
+
+    <script>
+        const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'curabitur', 'vel', 'hendrerit', 'libero', 'eleifend', 'blandit', 'nunc', 'ornare', 'odio', 'ut', 'orci', 'gravida', 'imperdiet', 'nullam', 'purus', 'lacinia', 'a', 'pretium', 'quis', 'congue', 'praesent', 'sagittis', 'laoreet', 'auctor', 'mauris', 'non', 'velit', 'eros', 'dictum', 'proin', 'accumsan', 'sapien', 'nec', 'massa', 'volutpat', 'venenatis', 'sed', 'eu', 'molestie', 'lacus', 'quisque', 'porttitor', 'ligula', 'dui', 'mollis', 'tempus', 'at', 'magna', 'vestibulum', 'turpis', 'ac', 'diam', 'tincidunt', 'id', 'condimentum', 'enim', 'sodales', 'in', 'hac', 'habitasse', 'platea', 'dictumst', 'aenean', 'neque', 'fusce', 'augue', 'leo', 'eget', 'semper', 'mattis', 'tortor', 'scelerisque', 'nulla', 'interdum', 'tellus', 'malesuada', 'rhoncus', 'porta', 'sem', 'aliquet', 'et', 'nam', 'suspendisse', 'potenti', 'vivamus', 'luctus', 'fringilla', 'erat', 'donec', 'justo', 'vehicula', 'ultricies', 'varius', 'ante', 'primis', 'faucibus', 'ultrices', 'posuere', 'cubilia', 'curae', 'etiam', 'cursus', 'aliquam', 'quam', 'dapibus', 'nisl', 'feugiat', 'egestas', 'class', 'aptent', 'taciti', 'sociosqu', 'ad', 'litora', 'torquent', 'per', 'conubia', 'nostra', 'inceptos', 'himenaeos', 'phasellus', 'nibh', 'pulvinar', 'vitae', 'urna', 'iaculis', 'lobortis', 'nisi', 'viverra', 'arcu', 'morbi', 'pellentesque', 'metus', 'commodo', 'ut', 'facilisis', 'felis', 'tristique', 'ullamcorper', 'placerat', 'aenean', 'convallis', 'sollicitudin', 'integer', 'rutrum', 'duis', 'est', 'etiam', 'bibendum', 'donec', 'pharetra', 'vulputate', 'maecenas', 'mi', 'fermentum', 'consequat', 'suscipit', 'aliquam', 'habitant', 'senectus', 'netus', 'fames', 'quisque', 'euismod', 'curabitur', 'lectus', 'elementum', 'tempor', 'risus', 'cras'];
+
+        function randomWord() { return words[Math.floor(Math.random() * words.length)]; }
+
+        function generateSentence(isFirst = false) {
+            const length = Math.floor(Math.random() * 8) + 6; // 6 to 14 words
+            let sentence = [];
+
+            for (let i = 0; i < length; i++) {
+                if (isFirst && i < 5) {
+                    sentence.push(['Lorem', 'ipsum', 'dolor', 'sit', 'amet'][i]);
+                } else {
+                    sentence.push(randomWord());
+                }
+            }
+
+            // capitalize first letter
+            sentence[0] = sentence[0].charAt(0).toUpperCase() + sentence[0].slice(1);
+            return sentence.join(' ') + '.';
+        }
+
+        function generateParagraph(isFirst = false) {
+            const numSentences = Math.floor(Math.random() * 4) + 4; // 4 to 8 sentences
+            let para = [];
+            for (let i = 0; i < numSentences; i++) {
+                para.push(generateSentence(isFirst && i === 0));
+            }
+            return para.join(' ');
+        }
+
+        function generate() {
+            const count = parseInt(document.getElementById('genCount').value) || 5;
+            const type = document.getElementById('genType').value;
+            const startWith = document.getElementById('startWith').checked;
+
+            const resultBox = document.getElementById('resultBox');
+            let res = [];
+
+            if (type === 'paragraphs') {
+                for (let i = 0; i < count; i++) { res.push(`<p>${generateParagraph(i === 0 && startWith)}</p>`); }
+                resultBox.innerHTML = res.join('');
+            } else if (type === 'sentences') {
+                let text = [];
+                for (let i = 0; i < count; i++) { text.push(generateSentence(i === 0 && startWith)); }
+                resultBox.innerHTML = text.join(' ');
+            } else if (type === 'words') {
+                let text = [];
+                for (let i = 0; i < count; i++) {
+                    if (startWith && i < 5) text.push(['Lorem', 'ipsum', 'dolor', 'sit', 'amet'][i]);
+                    else text.push(randomWord());
+                }
+                text[0] = text[0].charAt(0).toUpperCase() + text[0].slice(1);
+                resultBox.innerHTML = text.join(' ');
+            }
+        }
+
+        async function copyResult() {
+            const text = document.getElementById('resultBox').innerText;
+            if (!text) return;
+            try {
+                await navigator.clipboard.writeText(text);
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="ri-check-line"></i> Copied';
+                setTimeout(() => btn.innerHTML = orig, 1500);
+            } catch (e) { }
+        }
+
+        // Init
+        generate();
+    </script>
+</body>
+
+</html>

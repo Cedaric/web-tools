@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Tester - Web Tools</title>
+    <meta name="description" content="Test your regular expressions against target text in real-time.">
+    <meta name="tool-icon" content="ri-code-block-line">
+    <meta name="tool-tags" content="Regex, Developer Tools, Matching">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #0284c7;
+            --primary-hover: #0369a1;
+            --text-muted: #64748b;
+            --match-bg: #bae6fd;
+            --match-border: #38bdf8;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --text-color: #e2e8f0;
+                --surface-color: #1e293b;
+                --border-color: #334155;
+                --primary-color: #38bdf8;
+                --primary-hover: #0284c7;
+                --text-muted: #94a3b8;
+                --match-bg: rgba(56, 189, 248, 0.3);
+                --match-border: #0ea5e9;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--surface-color);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: var(--text-color);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--surface-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .panel-title {
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .regex-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0 1rem;
+            font-family: ui-monospace, monospace;
+            font-size: 1.1rem;
+            transition: border-color 0.2s;
+        }
+
+        .regex-input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.1);
+        }
+
+        .regex-slash {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        input[type="text"].regex-core {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+        }
+
+        input[type="text"].regex-flags {
+            width: 60px;
+            padding: 1rem 0.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            text-align: center;
+        }
+
+        .test-string-container {
+            position: relative;
+            min-height: 200px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--surface-color);
+            overflow: hidden;
+        }
+
+        .highlights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 1rem;
+            font-family: ui-monospace, monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: transparent;
+            /* Text is invisible, only background highlights show */
+            pointer-events: none;
+            overflow-y: auto;
+        }
+
+        textarea.target-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-family: ui-monospace, monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            overflow-y: auto;
+        }
+
+        mark {
+            background-color: var(--match-bg);
+            border-bottom: 2px solid var(--match-border);
+            border-radius: 3px;
+            color: transparent;
+        }
+
+        #matchInfo {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" title="Back to Tools"><i class="ri-arrow-left-line ri-xl"></i></a>
+        <h1><i class="ri-code-block-line text-primary"></i> Regex Tester</h1>
+    </header>
+
+    <main class="container">
+        <div class="panel">
+            <div class="panel-title">Regular Expression</div>
+            <div class="regex-input-wrapper">
+                <span class="regex-slash">/</span>
+                <input type="text" class="regex-core" id="regexInput"
+                    value="([a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9_-]+)" placeholder="Expression">
+                <span class="regex-slash">/</span>
+                <input type="text" class="regex-flags" id="flagsInput" value="gm" placeholder="Flags">
+            </div>
+            <div class="error-msg" id="regexError"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">
+                Test String
+                <span id="matchInfo">0 matches</span>
+            </div>
+            <div class="test-string-container">
+                <div class="highlights" id="highlights"></div>
+                <textarea class="target-text" id="testString" spellcheck="false"
+                    placeholder="Enter text to test your expression against...">Contact us at hello@example.com or support@ceda.is for more info! 
+Also try invalid@email without domain.</textarea>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const regexInput = document.getElementById('regexInput');
+        const flagsInput = document.getElementById('flagsInput');
+        const testString = document.getElementById('testString');
+        const highlights = document.getElementById('highlights');
+        const matchInfo = document.getElementById('matchInfo');
+        const regexError = document.getElementById('regexError');
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function handleScroll() {
+            highlights.scrollTop = testString.scrollTop;
+            highlights.scrollLeft = testString.scrollLeft;
+        }
+
+        function update() {
+            const exp = regexInput.value;
+            const flags = flagsInput.value;
+            const text = testString.value;
+
+            if (!exp) {
+                highlights.innerHTML = escapeHtml(text);
+                matchInfo.textContent = "0 matches";
+                regexError.textContent = "";
+                return;
+            }
+
+            try {
+                // To ensure infinite loop protection for global exec
+                const validFlags = flags.replace(/[^gimsuy]/g, '');
+                if (validFlags !== flags) {
+                    flagsInput.value = validFlags;
+                }
+
+                // Add g flag if missing to count all matches correctly in our highlighter, 
+                // but we respect what user typed to avoid confusing them. 
+                // However, without 'g', string.replace only replaces the first instance.
+                const regex = new RegExp(exp, validFlags.includes('g') ? validFlags : validFlags + 'g');
+                regexError.textContent = "";
+
+                let matchCount = 0;
+
+                // We use replace to insert mark tags
+                const highlighted = escapeHtml(text).replace(regex, (match) => {
+                    matchCount++;
+                    // We must escape the match string itself too in case it had html tags that were part of regex match
+                    return `<mark>${match}</mark>`;
+                });
+
+                // If user didn't specify 'g', the JS replace only caught the first one. Let's fix counter text.
+                if (!validFlags.includes('g') && matchCount > 1) {
+                    matchCount = 1;
+                }
+
+                highlights.innerHTML = highlighted;
+                matchInfo.textContent = `${matchCount} match${matchCount === 1 ? '' : 'es'}`;
+
+            } catch (err) {
+                regexError.textContent = err.message;
+                highlights.innerHTML = escapeHtml(text);
+                matchInfo.textContent = "Error";
+            }
+        }
+
+        regexInput.addEventListener('input', update);
+        flagsInput.addEventListener('input', update);
+        testString.addEventListener('input', update);
+        testString.addEventListener('scroll', handleScroll);
+
+        // Resize observer to keep highlight container matched to textarea
+        new ResizeObserver(() => handleScroll()).observe(testString);
+
+        // Init
+        update();
+    </script>
+</body>
+
+</html>
